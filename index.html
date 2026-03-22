@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo Conector Claude</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f0f4ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 480px;
+      width: 90%;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h1 { font-size: 1.8rem; color: #1a1a2e; margin-bottom: 8px; }
+    p { color: #555; margin-bottom: 24px; }
+    .counter {
+      font-size: 4rem;
+      font-weight: bold;
+      color: #4f46e5;
+      margin: 20px 0;
+    }
+    .buttons { display: flex; gap: 12px; justify-content: center; }
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    button:active { transform: scale(0.96); }
+    .btn-add { background: #4f46e5; color: white; }
+    .btn-reset { background: #e5e7eb; color: #333; }
+    .message {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #4f46e5;
+      min-height: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Hola desde Claude</h1>
+    <p>Este app fue creada y lanzada por Claude usando el conector <strong>Preview</strong></p>
+    <div class="counter" id="count">0</div>
+    <div class="buttons">
+      <button class="btn-add" onclick="sumar()">+1</button>
+      <button class="btn-reset" onclick="reset()">Reset</button>
+    </div>
+    <div class="message" id="msg"></div>
+  </div>
+
+  <script>
+    let n = 0;
+    function sumar() {
+      n++;
+      document.getElementById('count').textContent = n;
+      const msg = document.getElementById('msg');
+      if (n === 10) msg.textContent = '🎉 Llegaste a 10!';
+      else if (n === 5) msg.textContent = 'Vas por la mitad...';
+      else msg.textContent = '';
+    }
+    function reset() {
+      n = 0;
+      document.getElementById('count').textContent = 0;
+      document.getElementById('msg').textContent = '';
+    }
+  </script>
+</body>
+</html>
