@@ -8,314 +8,749 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: system-ui, sans-serif;
-      background: #f0fdf4;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
       min-height: 100vh;
-      padding: 24px 16px;
-      color: #1a1a1a;
     }
-    header {
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
+      padding: 60px 24px 100px;
       text-align: center;
-      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
     }
-    header h1 { font-size: 1.8rem; color: #15803d; }
-    header p { color: #555; margin-top: 6px; }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60%; left: -30%;
+      width: 160%; height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      color: #a7f3d0;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: white;
+      font-weight: 800;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .hero p { color: #a7f3d0; font-size: 1.05rem; }
 
-    /* Nombre */
-    .nombre-section {
-      max-width: 600px;
-      margin: 0 auto 28px;
+    /* CONTAINER */
+    .container {
+      max-width: 920px;
+      margin: -60px auto 60px;
+      padding: 0 16px;
     }
-    .nombre-section label { font-weight: 600; display: block; margin-bottom: 6px; color: #15803d; }
-    .nombre-section input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #bbf7d0;
-      border-radius: 10px;
-      font-size: 1rem;
-      outline: none;
-      transition: border 0.2s;
-    }
-    .nombre-section input:focus { border-color: #16a34a; }
 
-    /* Comidas */
-    .comidas-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      max-width: 1000px;
-      margin: 0 auto 32px;
-    }
-    .comida-card {
+    /* CARDS */
+    .card {
       background: white;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      margin-bottom: 20px;
+      animation: fadeUp 0.4s ease both;
     }
-    .comida-card h2 {
-      font-size: 1rem;
-      color: #15803d;
-      margin-bottom: 14px;
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #064e3b;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
-    .opciones {
+    .card-title .icon { font-size: 1.3rem; }
+
+    /* INPUTS */
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media(max-width: 500px) { .input-row { grid-template-columns: 1fr; } }
+    .input-group label {
+      display: block;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 7px;
+      font-size: 0.85rem;
+    }
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 11px 15px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+      background: white;
+      color: #1e293b;
+    }
+    .input-group input:focus,
+    .input-group select:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16,185,129,0.12);
+    }
+
+    /* TABS */
+    .tabs {
       display: flex;
-      flex-wrap: wrap;
       gap: 8px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
     }
-    .btn-alimento {
-      padding: 8px 14px;
-      border: 2px solid #bbf7d0;
+    .tab {
+      padding: 9px 20px;
       border-radius: 20px;
+      border: 2px solid #e5e7eb;
       background: white;
       cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.15s;
-      color: #333;
+      font-weight: 600;
+      font-size: 0.88rem;
+      transition: all 0.2s;
+      color: #6b7280;
     }
-    .btn-alimento:hover { border-color: #16a34a; background: #f0fdf4; }
-    .btn-alimento.selected {
-      background: #16a34a;
-      border-color: #16a34a;
+    .tab:hover { border-color: #10b981; color: #064e3b; }
+    .tab.active { background: #064e3b; border-color: #064e3b; color: white; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* FOOD BUTTONS */
+    .food-grid { display: flex; flex-wrap: wrap; gap: 9px; }
+    .food-btn {
+      padding: 9px 15px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      font-size: 0.88rem;
+      transition: all 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #374151;
+    }
+    .food-btn:hover {
+      border-color: #10b981;
+      background: #f0fdf4;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16,185,129,0.15);
+    }
+    .food-btn.selected {
+      background: linear-gradient(135deg, #064e3b, #10b981);
+      border-color: transparent;
       color: white;
       font-weight: 600;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(6,78,59,0.3);
     }
 
-    /* Plan resumen */
-    .resumen {
-      max-width: 600px;
-      margin: 0 auto 28px;
-      background: white;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-    }
-    .resumen h2 { color: #15803d; margin-bottom: 16px; font-size: 1.1rem; }
-    .resumen-item {
+    /* CONTADOR */
+    .contador {
       display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #f0fdf4;
-      font-size: 0.9rem;
+      gap: 14px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+      padding-top: 16px;
+      border-top: 1px solid #f1f5f9;
     }
-    .resumen-item:last-child { border-bottom: none; }
-    .resumen-label { font-weight: 600; color: #555; }
-    .resumen-valor { color: #15803d; font-weight: 500; text-align: right; max-width: 60%; }
-    .resumen-valor.vacio { color: #ccc; font-style: italic; }
+    .contador-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: #6b7280;
+      font-weight: 500;
+    }
+    .contador-badge {
+      background: #064e3b;
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      min-width: 22px;
+      text-align: center;
+    }
 
-    /* Botón PDF */
-    .btn-pdf {
+    /* PLAN SEMANAL */
+    .semana-wrapper { overflow-x: auto; padding-bottom: 8px; }
+    .semana-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(110px, 1fr));
+      gap: 10px;
+      min-width: 700px;
+    }
+    .dia-card {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 14px 10px;
+      border: 1px solid #e5e7eb;
+    }
+    .dia-nombre {
+      font-weight: 800;
+      font-size: 0.7rem;
+      color: #064e3b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .dia-comida {
+      font-size: 0.72rem;
+      color: #374151;
+      margin-bottom: 6px;
+      padding: 6px 8px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    .dia-comida .label {
+      font-weight: 700;
+      color: #10b981;
       display: block;
-      margin: 0 auto;
-      padding: 14px 40px;
-      background: #15803d;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    /* RECOMENDACIONES */
+    .rec-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      background: #f0fdf4;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border-left: 4px solid #10b981;
+    }
+    .rec-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+    .rec-text { font-size: 0.88rem; color: #374151; line-height: 1.5; }
+    .rec-text strong { color: #064e3b; }
+
+    /* DOWNLOAD BUTTON */
+    .btn-download {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #064e3b 0%, #10b981 100%);
       color: white;
       border: none;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 600;
+      border-radius: 16px;
+      font-size: 1.05rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      transition: all 0.2s;
+      margin-top: 4px;
+      box-shadow: 0 4px 20px rgba(6,78,59,0.25);
     }
-    .btn-pdf:hover { background: #166534; }
-    .btn-pdf:active { transform: scale(0.97); }
-    .btn-pdf:disabled { background: #a7f3d0; cursor: not-allowed; }
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(6,78,59,0.35);
+    }
+    .btn-download:active { transform: translateY(0); }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>🥗 Plan de Alimentación Saludable</h1>
-    <p>Selecciona tus comidas para cada momento del día</p>
-  </header>
-
-  <div class="nombre-section">
-    <label for="nombre">Nombre de la persona</label>
-    <input type="text" id="nombre" placeholder="Ej: María García" oninput="actualizarResumen()" />
+  <div class="hero">
+    <div class="hero-badge">✨ Plan personalizado</div>
+    <h1>🥗 Plan de Alimentación<br>Saludable</h1>
+    <p>Seleccioná tus ingredientes favoritos y armá tu plan semanal</p>
   </div>
 
-  <div class="comidas-grid">
+  <div class="container">
 
-    <div class="comida-card">
-      <h2>🌅 Desayuno</h2>
-      <div class="opciones" id="desayuno">
-        <button class="btn-alimento" onclick="toggle(this, 'desayuno')">Avena con frutas</button>
-        <button class="btn-alimento" onclick="toggle(this, 'desayuno')">Huevos revueltos</button>
-        <button class="btn-alimento" onclick="toggle(this, 'desayuno')">Tostadas integrales</button>
-        <button class="btn-alimento" onclick="toggle(this, 'desayuno')">Yogur con granola</button>
-        <button class="btn-alimento" onclick="toggle(this, 'desayuno')">Smoothie verde</button>
-        <button class="btn-alimento" onclick="toggle(this, 'desayuno')">Fruta fresca</button>
+    <!-- Datos personales -->
+    <div class="card">
+      <div class="card-title"><span class="icon">👤</span> Datos personales</div>
+      <div class="input-row">
+        <div class="input-group">
+          <label>Nombre completo</label>
+          <input type="text" id="nombre" placeholder="Tu nombre" oninput="actualizar()">
+        </div>
+        <div class="input-group">
+          <label>Objetivo principal</label>
+          <select id="objetivo" onchange="actualizar()">
+            <option value="bajar">⬇️ Bajar de peso</option>
+            <option value="mantener">⚖️ Mantener peso</option>
+            <option value="ganar">💪 Ganar masa muscular</option>
+            <option value="energia">⚡ Más energía</option>
+          </select>
+        </div>
       </div>
     </div>
 
-    <div class="comida-card">
-      <h2>☀️ Almuerzo</h2>
-      <div class="opciones" id="almuerzo">
-        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Pollo a la plancha</button>
-        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Ensalada mixta</button>
-        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Arroz integral</button>
-        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Lentejas</button>
-        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Salmón al horno</button>
-        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Verduras salteadas</button>
-        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Quinoa</button>
+    <!-- Selección de alimentos -->
+    <div class="card">
+      <div class="card-title"><span class="icon">🍽️</span> Seleccioná tus alimentos preferidos</div>
+      <div class="tabs">
+        <button class="tab active" onclick="cambiarTab('desayuno', this)">🌅 Desayuno</button>
+        <button class="tab" onclick="cambiarTab('almuerzo', this)">☀️ Almuerzo</button>
+        <button class="tab" onclick="cambiarTab('cena', this)">🌙 Cena</button>
+        <button class="tab" onclick="cambiarTab('snacks', this)">🍎 Snacks</button>
+      </div>
+      <div id="tab-desayuno" class="tab-content active"><div class="food-grid" id="grid-desayuno"></div></div>
+      <div id="tab-almuerzo" class="tab-content"><div class="food-grid" id="grid-almuerzo"></div></div>
+      <div id="tab-cena" class="tab-content"><div class="food-grid" id="grid-cena"></div></div>
+      <div id="tab-snacks" class="tab-content"><div class="food-grid" id="grid-snacks"></div></div>
+      <div class="contador" id="contador"></div>
+    </div>
+
+    <!-- Plan semanal -->
+    <div class="card" id="card-semana" style="display:none">
+      <div class="card-title"><span class="icon">📅</span> Tu plan semanal</div>
+      <div class="semana-wrapper">
+        <div class="semana-grid" id="semana-grid"></div>
       </div>
     </div>
 
-    <div class="comida-card">
-      <h2>🌙 Cena</h2>
-      <div class="opciones" id="cena">
-        <button class="btn-alimento" onclick="toggle(this, 'cena')">Sopa de verduras</button>
-        <button class="btn-alimento" onclick="toggle(this, 'cena')">Pechuga al horno</button>
-        <button class="btn-alimento" onclick="toggle(this, 'cena')">Ensalada César</button>
-        <button class="btn-alimento" onclick="toggle(this, 'cena')">Atún con vegetales</button>
-        <button class="btn-alimento" onclick="toggle(this, 'cena')">Tortilla de espinacas</button>
-        <button class="btn-alimento" onclick="toggle(this, 'cena')">Brócoli al vapor</button>
-      </div>
+    <!-- Recomendaciones -->
+    <div class="card" id="card-recs" style="display:none">
+      <div class="card-title"><span class="icon">💡</span> Recomendaciones personalizadas</div>
+      <div id="recs-lista"></div>
     </div>
 
-    <div class="comida-card">
-      <h2>🍎 Snacks</h2>
-      <div class="opciones" id="snacks">
-        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Almendras</button>
-        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Manzana</button>
-        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Zanahoria</button>
-        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Hummus</button>
-        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Banana</button>
-        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Nueces</button>
-        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Maní natural</button>
-      </div>
-    </div>
+    <!-- Descargar -->
+    <button class="btn-download" onclick="generarPDF()">⬇️ Descargar Plan Semanal en PDF</button>
 
   </div>
-
-  <div class="resumen">
-    <h2>📋 Tu Plan del Día</h2>
-    <div class="resumen-item">
-      <span class="resumen-label">Persona</span>
-      <span class="resumen-valor vacio" id="r-nombre">Sin nombre</span>
-    </div>
-    <div class="resumen-item">
-      <span class="resumen-label">🌅 Desayuno</span>
-      <span class="resumen-valor vacio" id="r-desayuno">Sin selección</span>
-    </div>
-    <div class="resumen-item">
-      <span class="resumen-label">☀️ Almuerzo</span>
-      <span class="resumen-valor vacio" id="r-almuerzo">Sin selección</span>
-    </div>
-    <div class="resumen-item">
-      <span class="resumen-label">🌙 Cena</span>
-      <span class="resumen-valor vacio" id="r-cena">Sin selección</span>
-    </div>
-    <div class="resumen-item">
-      <span class="resumen-label">🍎 Snacks</span>
-      <span class="resumen-valor vacio" id="r-snacks">Sin selección</span>
-    </div>
-  </div>
-
-  <button class="btn-pdf" onclick="generarPDF()">⬇️ Descargar Plan en PDF</button>
 
   <script>
-    const plan = { desayuno: [], almuerzo: [], cena: [], snacks: [] };
+    const alimentos = {
+      desayuno: [
+        { nombre: 'Avena con frutas',     emoji: '🥣', tipo: 'carbohidrato' },
+        { nombre: 'Huevos revueltos',     emoji: '🍳', tipo: 'proteina' },
+        { nombre: 'Tostadas integrales',  emoji: '🍞', tipo: 'carbohidrato' },
+        { nombre: 'Yogur con granola',    emoji: '🥛', tipo: 'proteina' },
+        { nombre: 'Smoothie verde',       emoji: '🥤', tipo: 'vegetal' },
+        { nombre: 'Fruta fresca',         emoji: '🍓', tipo: 'fruta' },
+        { nombre: 'Pancakes de avena',    emoji: '🥞', tipo: 'carbohidrato' },
+        { nombre: 'Chia pudding',         emoji: '🌱', tipo: 'grasa_buena' },
+        { nombre: 'Tortilla de huevo',    emoji: '🍳', tipo: 'proteina' },
+        { nombre: 'Queso cottage',        emoji: '🧀', tipo: 'proteina' },
+        { nombre: 'Batido de proteínas',  emoji: '🥤', tipo: 'proteina' },
+        { nombre: 'Muesli con leche',     emoji: '🥣', tipo: 'carbohidrato' },
+        { nombre: 'Mantequilla de maní',  emoji: '🥜', tipo: 'grasa_buena' },
+        { nombre: 'Tazón de açaí',        emoji: '🫐', tipo: 'fruta' },
+      ],
+      almuerzo: [
+        { nombre: 'Pollo a la plancha',   emoji: '🍗', tipo: 'proteina' },
+        { nombre: 'Ensalada mixta',       emoji: '🥗', tipo: 'vegetal' },
+        { nombre: 'Arroz integral',       emoji: '🍚', tipo: 'carbohidrato' },
+        { nombre: 'Lentejas',             emoji: '🫘', tipo: 'proteina' },
+        { nombre: 'Salmón al horno',      emoji: '🐟', tipo: 'proteina' },
+        { nombre: 'Verduras salteadas',   emoji: '🥦', tipo: 'vegetal' },
+        { nombre: 'Quinoa',               emoji: '🌾', tipo: 'carbohidrato' },
+        { nombre: 'Pasta integral',       emoji: '🍝', tipo: 'carbohidrato' },
+        { nombre: 'Pavo al horno',        emoji: '🍗', tipo: 'proteina' },
+        { nombre: 'Tofu salteado',        emoji: '🌿', tipo: 'proteina' },
+        { nombre: 'Frijoles negros',      emoji: '🫘', tipo: 'proteina' },
+        { nombre: 'Camote asado',         emoji: '🍠', tipo: 'carbohidrato' },
+        { nombre: 'Atún en ensalada',     emoji: '🐟', tipo: 'proteina' },
+        { nombre: 'Wrap de pollo',        emoji: '🌯', tipo: 'proteina' },
+        { nombre: 'Bowl de arroz',        emoji: '🍱', tipo: 'carbohidrato' },
+        { nombre: 'Garbanzos al curry',   emoji: '🍛', tipo: 'proteina' },
+      ],
+      cena: [
+        { nombre: 'Sopa de verduras',        emoji: '🍲', tipo: 'vegetal' },
+        { nombre: 'Pechuga al horno',        emoji: '🍗', tipo: 'proteina' },
+        { nombre: 'Ensalada César',          emoji: '🥗', tipo: 'vegetal' },
+        { nombre: 'Atún con vegetales',      emoji: '🐟', tipo: 'proteina' },
+        { nombre: 'Tortilla de espinacas',   emoji: '🥬', tipo: 'vegetal' },
+        { nombre: 'Brócoli al vapor',        emoji: '🥦', tipo: 'vegetal' },
+        { nombre: 'Tilapia a la plancha',    emoji: '🐠', tipo: 'proteina' },
+        { nombre: 'Champiñones salteados',   emoji: '🍄', tipo: 'vegetal' },
+        { nombre: 'Calabacín relleno',       emoji: '🥒', tipo: 'vegetal' },
+        { nombre: 'Espárragos al horno',     emoji: '🌿', tipo: 'vegetal' },
+        { nombre: 'Berenjena al horno',      emoji: '🍆', tipo: 'vegetal' },
+        { nombre: 'Caldo de pollo',          emoji: '🍜', tipo: 'proteina' },
+        { nombre: 'Revuelto de huevos',      emoji: '🍳', tipo: 'proteina' },
+        { nombre: 'Pescado al limón',        emoji: '🐡', tipo: 'proteina' },
+        { nombre: 'Ensalada de tomate',      emoji: '🍅', tipo: 'vegetal' },
+      ],
+      snacks: [
+        { nombre: 'Almendras',       emoji: '🌰', tipo: 'grasa_buena' },
+        { nombre: 'Manzana',         emoji: '🍎', tipo: 'fruta' },
+        { nombre: 'Zanahoria',       emoji: '🥕', tipo: 'vegetal' },
+        { nombre: 'Hummus',          emoji: '🫘', tipo: 'proteina' },
+        { nombre: 'Banana',          emoji: '🍌', tipo: 'fruta' },
+        { nombre: 'Nueces',          emoji: '🌰', tipo: 'grasa_buena' },
+        { nombre: 'Maní natural',    emoji: '🥜', tipo: 'grasa_buena' },
+        { nombre: 'Edamame',         emoji: '🌱', tipo: 'proteina' },
+        { nombre: 'Pepino',          emoji: '🥒', tipo: 'vegetal' },
+        { nombre: 'Kiwi',            emoji: '🥝', tipo: 'fruta' },
+        { nombre: 'Arándanos',       emoji: '🫐', tipo: 'fruta' },
+        { nombre: 'Palitos de apio', emoji: '🌿', tipo: 'vegetal' },
+        { nombre: 'Queso bajo en grasa', emoji: '🧀', tipo: 'proteina' },
+        { nombre: 'Naranja',         emoji: '🍊', tipo: 'fruta' },
+      ],
+    };
 
-    function toggle(btn, comida) {
-      const texto = btn.textContent;
+    const plan = { desayuno: [], almuerzo: [], cena: [], snacks: [] };
+    const dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+    const diasCortos = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+
+    // Render buttons
+    Object.keys(alimentos).forEach(cat => {
+      const grid = document.getElementById('grid-' + cat);
+      alimentos[cat].forEach(item => {
+        const btn = document.createElement('button');
+        btn.className = 'food-btn';
+        btn.innerHTML = `${item.emoji} ${item.nombre}`;
+        btn.onclick = () => toggle(btn, cat, item.nombre);
+        grid.appendChild(btn);
+      });
+    });
+
+    function toggle(btn, cat, nombre) {
       if (btn.classList.contains('selected')) {
         btn.classList.remove('selected');
-        plan[comida] = plan[comida].filter(x => x !== texto);
+        plan[cat] = plan[cat].filter(x => x !== nombre);
       } else {
         btn.classList.add('selected');
-        plan[comida].push(texto);
+        plan[cat].push(nombre);
       }
-      actualizarResumen();
+      actualizar();
     }
 
-    function actualizarResumen() {
-      const nombre = document.getElementById('nombre').value.trim();
-      const rNombre = document.getElementById('r-nombre');
-      rNombre.textContent = nombre || 'Sin nombre';
-      rNombre.className = 'resumen-valor' + (nombre ? '' : ' vacio');
-
-      ['desayuno', 'almuerzo', 'cena', 'snacks'].forEach(comida => {
-        const el = document.getElementById('r-' + comida);
-        const items = plan[comida];
-        if (items.length > 0) {
-          el.textContent = items.join(', ');
-          el.className = 'resumen-valor';
-        } else {
-          el.textContent = 'Sin selección';
-          el.className = 'resumen-valor vacio';
-        }
-      });
+    function cambiarTab(tab, el) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('tab-' + tab).classList.add('active');
     }
+
+    function getEmoji(nombre, cat) {
+      const item = alimentos[cat]?.find(a => a.nombre === nombre);
+      return item ? item.emoji : '🍽️';
+    }
+
+    function getTipo(nombre) {
+      for (const cat of Object.keys(alimentos)) {
+        const item = alimentos[cat].find(a => a.nombre === nombre);
+        if (item) return item.tipo;
+      }
+      return 'otro';
+    }
+
+    function generarPlanSemanal() {
+      return dias.map((dia, i) => ({
+        dia,
+        diaCorto: diasCortos[i],
+        desayuno: plan.desayuno.length ? plan.desayuno[i % plan.desayuno.length] : null,
+        almuerzo: plan.almuerzo.length ? plan.almuerzo[i % plan.almuerzo.length] : null,
+        cena:     plan.cena.length     ? plan.cena[i % plan.cena.length]         : null,
+        snack:    plan.snacks.length   ? plan.snacks[i % plan.snacks.length]     : null,
+      }));
+    }
+
+    function generarRecomendaciones() {
+      const todos = [...plan.desayuno, ...plan.almuerzo, ...plan.cena, ...plan.snacks];
+      const tipos = todos.map(getTipo);
+      const objetivo = document.getElementById('objetivo').value;
+      const recs = [];
+
+      const count = t => tipos.filter(x => x === t).length;
+      const proteinas = count('proteina');
+      const vegetales = count('vegetal');
+      const frutas = count('fruta');
+      const carbos = count('carbohidrato');
+      const grasas = count('grasa_buena');
+
+      if (proteinas >= 3) recs.push({ icon: '💧', text: '<strong>Hidratación esencial:</strong> Con un plan alto en proteínas, tomá al menos 2.5 litros de agua por día para facilitar la digestión y el metabolismo.' });
+      if (vegetales >= 3) recs.push({ icon: '✅', text: '<strong>Excelente aporte de fibra:</strong> Tu selección rica en vegetales favorece la digestión y te mantiene saciado por más tiempo.' });
+      if (frutas >= 2) recs.push({ icon: '🌟', text: '<strong>Vitaminas y antioxidantes:</strong> Las frutas que elegiste aportan vitamina C y antioxidantes que fortalecen el sistema inmune.' });
+      if (grasas >= 2) recs.push({ icon: '🧠', text: '<strong>Grasas saludables para el cerebro:</strong> Los frutos secos y semillas son excelentes para la salud cerebral y cardiovascular.' });
+      if (carbos >= 3) recs.push({ icon: '⚡', text: '<strong>Energía sostenida:</strong> Los carbohidratos complejos elegidos proveen energía estable. Consumilos en las primeras horas del día.' });
+
+      if (objetivo === 'bajar') recs.push({ icon: '⏰', text: '<strong>Ayuno intermitente opcional:</strong> Dejá 12 horas entre la cena y el desayuno para maximizar la quema de grasa.' });
+      else if (objetivo === 'ganar') recs.push({ icon: '💪', text: '<strong>Aumentá las porciones de proteína:</strong> Apuntá a 1.6–2.2g de proteína por kg de peso y comé dentro de los 30 min post-entrenamiento.' });
+      else if (objetivo === 'energia') recs.push({ icon: '🌅', text: '<strong>Desayuno fuerte:</strong> Hacé del desayuno tu comida más completa e incluí proteínas y carbohidratos complejos para arrancar con energía.' });
+      else if (objetivo === 'mantener') recs.push({ icon: '⚖️', text: '<strong>Balance calórico:</strong> Distribuí tus comidas en horarios regulares para mantener el metabolismo activo durante todo el día.' });
+
+      if (todos.length < 5) recs.push({ icon: '🎯', text: '<strong>Ampliá tu variedad:</strong> Seleccioná más alimentos para asegurar un aporte completo de nutrientes a lo largo de la semana.' });
+      if (recs.length === 0) recs.push({ icon: '🥗', text: '<strong>Seguí seleccionando:</strong> Elegí alimentos en cada categoría para obtener recomendaciones personalizadas.' });
+
+      return recs;
+    }
+
+    function actualizar() {
+      const total = Object.values(plan).flat().length;
+
+      document.getElementById('contador').innerHTML = `
+        <div class="contador-item">🌅 Desayuno <span class="contador-badge">${plan.desayuno.length}</span></div>
+        <div class="contador-item">☀️ Almuerzo <span class="contador-badge">${plan.almuerzo.length}</span></div>
+        <div class="contador-item">🌙 Cena <span class="contador-badge">${plan.cena.length}</span></div>
+        <div class="contador-item">🍎 Snacks <span class="contador-badge">${plan.snacks.length}</span></div>
+      `;
+
+      const show = total > 0;
+      document.getElementById('card-semana').style.display = show ? 'block' : 'none';
+      document.getElementById('card-recs').style.display = show ? 'block' : 'none';
+      if (!show) return;
+
+      // Semana
+      const planSemanal = generarPlanSemanal();
+      document.getElementById('semana-grid').innerHTML = planSemanal.map(d => `
+        <div class="dia-card">
+          <div class="dia-nombre">${d.diaCorto}</div>
+          ${d.desayuno ? `<div class="dia-comida"><span class="label">Desayuno</span>${getEmoji(d.desayuno,'desayuno')} ${d.desayuno}</div>` : ''}
+          ${d.almuerzo ? `<div class="dia-comida"><span class="label">Almuerzo</span>${getEmoji(d.almuerzo,'almuerzo')} ${d.almuerzo}</div>` : ''}
+          ${d.cena     ? `<div class="dia-comida"><span class="label">Cena</span>${getEmoji(d.cena,'cena')} ${d.cena}</div>` : ''}
+          ${d.snack    ? `<div class="dia-comida"><span class="label">Snack</span>${getEmoji(d.snack,'snacks')} ${d.snack}</div>` : ''}
+        </div>
+      `).join('');
+
+      // Recomendaciones
+      document.getElementById('recs-lista').innerHTML = generarRecomendaciones().map(r => `
+        <div class="rec-item">
+          <span class="rec-icon">${r.icon}</span>
+          <span class="rec-text">${r.text}</span>
+        </div>
+      `).join('');
+    }
+
+    /* ---- PDF ---- */
+    function emojiToBase64(emoji, size = 80) {
+      const c = document.createElement('canvas');
+      c.width = c.height = size;
+      const ctx = c.getContext('2d');
+      ctx.font = `${size * 0.72}px serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(emoji, size / 2, size / 2);
+      return c.toDataURL('image/png');
+    }
+
+    function stripHtml(str) { return str.replace(/<[^>]+>/g, ''); }
 
     function generarPDF() {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
       const nombre = document.getElementById('nombre').value.trim() || 'Sin nombre';
+      const objEl = document.getElementById('objetivo');
+      const objetivoTexto = objEl.options[objEl.selectedIndex].text.replace(/[^\x00-\x7F]/g, '').trim();
       const fecha = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+      const planSemanal = generarPlanSemanal();
+      const recs = generarRecomendaciones();
 
-      // Fondo header
-      doc.setFillColor(21, 128, 61);
-      doc.rect(0, 0, 210, 40, 'F');
+      /* ── PORTADA ── */
+      doc.setFillColor(6, 78, 59);
+      doc.rect(0, 0, 210, 297, 'F');
+      doc.setFillColor(4, 120, 87);
+      doc.roundedRect(12, 12, 186, 273, 10, 10, 'F');
 
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(22);
+      // Emoji principal grande
+      doc.addImage(emojiToBase64('🥗', 160), 'PNG', 72, 28, 66, 66);
+
       doc.setFont('helvetica', 'bold');
-      doc.text('Plan de Alimentacion Saludable', 105, 18, { align: 'center' });
-      doc.setFontSize(11);
+      doc.setFontSize(26);
+      doc.setTextColor(255, 255, 255);
+      doc.text('Plan de Alimentacion', 105, 108, { align: 'center' });
+      doc.text('Saludable', 105, 120, { align: 'center' });
+
       doc.setFont('helvetica', 'normal');
-      doc.text(`Preparado para: ${nombre}`, 105, 28, { align: 'center' });
-      doc.text(`Fecha: ${fecha}`, 105, 36, { align: 'center' });
+      doc.setFontSize(12);
+      doc.setTextColor(167, 243, 208);
+      doc.text('Plan personalizado para:', 105, 136, { align: 'center' });
 
-      let y = 55;
-      const comidas = [
-        { key: 'desayuno', emoji: 'Desayuno', icon: '🌅' },
-        { key: 'almuerzo', emoji: 'Almuerzo', icon: '☀️' },
-        { key: 'cena',     emoji: 'Cena',     icon: '🌙' },
-        { key: 'snacks',   emoji: 'Snacks',   icon: '🍎' },
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(20);
+      doc.setTextColor(255, 255, 255);
+      doc.text(nombre, 105, 149, { align: 'center' });
+
+      // Cajas info
+      doc.setFillColor(6, 78, 59);
+      doc.roundedRect(22, 163, 78, 28, 5, 5, 'F');
+      doc.roundedRect(110, 163, 78, 28, 5, 5, 'F');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(167, 243, 208);
+      doc.text('OBJETIVO', 61, 171, { align: 'center' });
+      doc.text('FECHA', 149, 171, { align: 'center' });
+
+      doc.setFontSize(10);
+      doc.setTextColor(255, 255, 255);
+      doc.text(objetivoTexto, 61, 182, { align: 'center' });
+      const fechaCorta = new Date().toLocaleDateString('es-ES');
+      doc.text(fechaCorta, 149, 182, { align: 'center' });
+
+      // Íconos de cada comida en portada
+      const iconosCat = [
+        { cat: 'desayuno', emoji: '🌅', label: 'Desayuno' },
+        { cat: 'almuerzo', emoji: '☀️', label: 'Almuerzo' },
+        { cat: 'cena', emoji: '🌙', label: 'Cena' },
+        { cat: 'snacks', emoji: '🍎', label: 'Snacks' },
       ];
-
-      comidas.forEach(({ key, emoji }) => {
-        // Título de sección
-        doc.setFillColor(240, 253, 244);
-        doc.roundedRect(14, y - 6, 182, 10, 3, 3, 'F');
-        doc.setTextColor(21, 128, 61);
-        doc.setFontSize(13);
+      let ix = 22;
+      iconosCat.forEach(({ cat, emoji, label }) => {
+        doc.addImage(emojiToBase64(emoji, 80), 'PNG', ix, 202, 18, 18);
         doc.setFont('helvetica', 'bold');
-        doc.text(emoji, 20, y + 1);
-        y += 10;
-
-        const items = plan[key];
-        if (items.length === 0) {
-          doc.setTextColor(180, 180, 180);
-          doc.setFontSize(10);
-          doc.setFont('helvetica', 'italic');
-          doc.text('  Sin seleccion', 20, y);
-        } else {
-          doc.setTextColor(50, 50, 50);
-          doc.setFontSize(10);
-          doc.setFont('helvetica', 'normal');
-          items.forEach(item => {
-            doc.text(`  • ${item}`, 20, y);
-            y += 7;
-          });
-          y -= 7;
-        }
-        y += 16;
+        doc.setFontSize(7);
+        doc.setTextColor(167, 243, 208);
+        doc.text(label, ix + 9, 224, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(255, 255, 255);
+        doc.text(String(plan[cat].length) + ' items', ix + 9, 230, { align: 'center' });
+        ix += 46;
       });
 
-      // Footer
-      doc.setFillColor(21, 128, 61);
-      doc.rect(0, 280, 210, 17, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(9);
-      doc.text('Generado con Plan de Alimentacion Saludable', 105, 290, { align: 'center' });
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(52, 211, 153);
+      doc.text('Plan de Alimentacion Saludable · ' + fecha, 105, 270, { align: 'center' });
 
-      doc.save(`plan-saludable-${nombre.replace(/\s+/g, '-')}.pdf`);
+      /* ── PÁGINA 2: PLAN SEMANAL ── */
+      doc.addPage();
+      doc.setFillColor(6, 78, 59);
+      doc.rect(0, 0, 210, 22, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(255, 255, 255);
+      doc.text('Plan Semanal  —  ' + nombre, 14, 15);
+
+      let y = 32;
+
+      planSemanal.forEach(dia => {
+        if (y > 245) {
+          doc.addPage();
+          doc.setFillColor(6, 78, 59);
+          doc.rect(0, 0, 210, 18, 'F');
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(11);
+          doc.setTextColor(255, 255, 255);
+          doc.text('Plan Semanal (cont.)', 14, 13);
+          y = 26;
+        }
+
+        // Header del día
+        doc.setFillColor(6, 78, 59);
+        doc.roundedRect(14, y, 182, 9, 2, 2, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(255, 255, 255);
+        doc.text(dia.dia.toUpperCase(), 19, y + 6.2);
+        y += 12;
+
+        const comidas = [
+          { label: 'Desayuno', valor: dia.desayuno, cat: 'desayuno', color: [255, 237, 213] },
+          { label: 'Almuerzo', valor: dia.almuerzo, cat: 'almuerzo', color: [220, 252, 231] },
+          { label: 'Cena',     valor: dia.cena,     cat: 'cena',     color: [219, 234, 254] },
+          { label: 'Snack',    valor: dia.snack,    cat: 'snacks',   color: [254, 243, 199] },
+        ];
+
+        comidas.forEach(c => {
+          if (!c.valor) return;
+          doc.setFillColor(...c.color);
+          doc.roundedRect(14, y - 1, 182, 9, 2, 2, 'F');
+          doc.addImage(emojiToBase64(getEmoji(c.valor, c.cat), 60), 'PNG', 16, y, 7, 7);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(6, 78, 59);
+          doc.text(c.label + ':', 26, y + 5);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(30, 41, 59);
+          doc.setFontSize(8.5);
+          doc.text(c.valor, 52, y + 5);
+          y += 10;
+        });
+
+        y += 4;
+      });
+
+      /* ── PÁGINA 3: RECOMENDACIONES ── */
+      doc.addPage();
+      doc.setFillColor(6, 78, 59);
+      doc.rect(0, 0, 210, 22, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(255, 255, 255);
+      doc.text('Recomendaciones Personalizadas', 14, 15);
+
+      y = 32;
+      recs.forEach(rec => {
+        const text = stripHtml(rec.text);
+        const lines = doc.splitTextToSize(text, 158);
+        const h = Math.max(18, lines.length * 5 + 10);
+
+        doc.setFillColor(240, 253, 244);
+        doc.roundedRect(14, y, 182, h, 4, 4, 'F');
+        doc.setFillColor(16, 185, 129);
+        doc.rect(14, y, 1.5, h, 'F');
+        doc.addImage(emojiToBase64(rec.icon, 60), 'PNG', 18, y + 3, 10, 10);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.5);
+        doc.setTextColor(30, 41, 59);
+        lines.forEach((line, li) => doc.text(line, 32, y + 7 + li * 5));
+        y += h + 7;
+      });
+
+      // Resumen de alimentos seleccionados
+      y += 4;
+      if (y > 260) { doc.addPage(); y = 20; }
+      doc.setFillColor(6, 78, 59);
+      doc.roundedRect(14, y, 182, 9, 3, 3, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(255, 255, 255);
+      doc.text('Alimentos seleccionados', 19, y + 6.2);
+      y += 13;
+
+      const catLabels = { desayuno: 'Desayuno', almuerzo: 'Almuerzo', cena: 'Cena', snacks: 'Snacks' };
+      Object.keys(plan).forEach(cat => {
+        if (!plan[cat].length) return;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(6, 78, 59);
+        doc.text(catLabels[cat] + ':', 19, y);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(30, 41, 59);
+        const lines = doc.splitTextToSize(plan[cat].join('  ·  '), 165);
+        lines.forEach((l, li) => doc.text(l, 19, y + 5 + li * 5));
+        y += 7 + lines.length * 5;
+      });
+
+      /* ── FOOTER EN TODAS LAS PÁGINAS ── */
+      const total = doc.getNumberOfPages();
+      for (let p = 1; p <= total; p++) {
+        doc.setPage(p);
+        doc.setFillColor(6, 78, 59);
+        doc.rect(0, 287, 210, 10, 'F');
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7);
+        doc.setTextColor(167, 243, 208);
+        doc.text('Plan de Alimentacion Saludable  ·  ' + fecha, 14, 293);
+        doc.text('Pagina ' + p + ' de ' + total, 196, 293, { align: 'right' });
+      }
+
+      doc.save('plan-saludable-' + nombre.replace(/\s+/g, '-') + '.pdf');
     }
   </script>
-
 </body>
 </html>
