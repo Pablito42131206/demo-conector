@@ -2,81 +2,320 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Demo Conector Claude</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plan de Alimentación Saludable</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: system-ui, sans-serif;
-      background: #f0f4ff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: #f0fdf4;
       min-height: 100vh;
+      padding: 24px 16px;
+      color: #1a1a1a;
     }
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 40px;
-      max-width: 480px;
-      width: 90%;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    header {
       text-align: center;
+      margin-bottom: 32px;
     }
-    h1 { font-size: 1.8rem; color: #1a1a2e; margin-bottom: 8px; }
-    p { color: #555; margin-bottom: 24px; }
-    .counter {
-      font-size: 4rem;
-      font-weight: bold;
-      color: #4f46e5;
-      margin: 20px 0;
+    header h1 { font-size: 1.8rem; color: #15803d; }
+    header p { color: #555; margin-top: 6px; }
+
+    /* Nombre */
+    .nombre-section {
+      max-width: 600px;
+      margin: 0 auto 28px;
     }
-    .buttons { display: flex; gap: 12px; justify-content: center; }
-    button {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 8px;
+    .nombre-section label { font-weight: 600; display: block; margin-bottom: 6px; color: #15803d; }
+    .nombre-section input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #bbf7d0;
+      border-radius: 10px;
       font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .nombre-section input:focus { border-color: #16a34a; }
+
+    /* Comidas */
+    .comidas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto 32px;
+    }
+    .comida-card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .comida-card h2 {
+      font-size: 1rem;
+      color: #15803d;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .opciones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .btn-alimento {
+      padding: 8px 14px;
+      border: 2px solid #bbf7d0;
+      border-radius: 20px;
+      background: white;
       cursor: pointer;
-      transition: transform 0.1s;
+      font-size: 0.85rem;
+      transition: all 0.15s;
+      color: #333;
     }
-    button:active { transform: scale(0.96); }
-    .btn-add { background: #4f46e5; color: white; }
-    .btn-reset { background: #e5e7eb; color: #333; }
-    .message {
-      margin-top: 20px;
+    .btn-alimento:hover { border-color: #16a34a; background: #f0fdf4; }
+    .btn-alimento.selected {
+      background: #16a34a;
+      border-color: #16a34a;
+      color: white;
+      font-weight: 600;
+    }
+
+    /* Plan resumen */
+    .resumen {
+      max-width: 600px;
+      margin: 0 auto 28px;
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .resumen h2 { color: #15803d; margin-bottom: 16px; font-size: 1.1rem; }
+    .resumen-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0fdf4;
       font-size: 0.9rem;
-      color: #4f46e5;
-      min-height: 24px;
     }
+    .resumen-item:last-child { border-bottom: none; }
+    .resumen-label { font-weight: 600; color: #555; }
+    .resumen-valor { color: #15803d; font-weight: 500; text-align: right; max-width: 60%; }
+    .resumen-valor.vacio { color: #ccc; font-style: italic; }
+
+    /* Botón PDF */
+    .btn-pdf {
+      display: block;
+      margin: 0 auto;
+      padding: 14px 40px;
+      background: #15803d;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-pdf:hover { background: #166534; }
+    .btn-pdf:active { transform: scale(0.97); }
+    .btn-pdf:disabled { background: #a7f3d0; cursor: not-allowed; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Hola desde Claude</h1>
-    <p>Este app fue creada y lanzada por Claude usando el conector <strong>Preview</strong></p>
-    <div class="counter" id="count">0</div>
-    <div class="buttons">
-      <button class="btn-add" onclick="sumar()">+1</button>
-      <button class="btn-reset" onclick="reset()">Reset</button>
-    </div>
-    <div class="message" id="msg"></div>
+
+  <header>
+    <h1>🥗 Plan de Alimentación Saludable</h1>
+    <p>Selecciona tus comidas para cada momento del día</p>
+  </header>
+
+  <div class="nombre-section">
+    <label for="nombre">Nombre de la persona</label>
+    <input type="text" id="nombre" placeholder="Ej: María García" oninput="actualizarResumen()" />
   </div>
 
+  <div class="comidas-grid">
+
+    <div class="comida-card">
+      <h2>🌅 Desayuno</h2>
+      <div class="opciones" id="desayuno">
+        <button class="btn-alimento" onclick="toggle(this, 'desayuno')">Avena con frutas</button>
+        <button class="btn-alimento" onclick="toggle(this, 'desayuno')">Huevos revueltos</button>
+        <button class="btn-alimento" onclick="toggle(this, 'desayuno')">Tostadas integrales</button>
+        <button class="btn-alimento" onclick="toggle(this, 'desayuno')">Yogur con granola</button>
+        <button class="btn-alimento" onclick="toggle(this, 'desayuno')">Smoothie verde</button>
+        <button class="btn-alimento" onclick="toggle(this, 'desayuno')">Fruta fresca</button>
+      </div>
+    </div>
+
+    <div class="comida-card">
+      <h2>☀️ Almuerzo</h2>
+      <div class="opciones" id="almuerzo">
+        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Pollo a la plancha</button>
+        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Ensalada mixta</button>
+        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Arroz integral</button>
+        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Lentejas</button>
+        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Salmón al horno</button>
+        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Verduras salteadas</button>
+        <button class="btn-alimento" onclick="toggle(this, 'almuerzo')">Quinoa</button>
+      </div>
+    </div>
+
+    <div class="comida-card">
+      <h2>🌙 Cena</h2>
+      <div class="opciones" id="cena">
+        <button class="btn-alimento" onclick="toggle(this, 'cena')">Sopa de verduras</button>
+        <button class="btn-alimento" onclick="toggle(this, 'cena')">Pechuga al horno</button>
+        <button class="btn-alimento" onclick="toggle(this, 'cena')">Ensalada César</button>
+        <button class="btn-alimento" onclick="toggle(this, 'cena')">Atún con vegetales</button>
+        <button class="btn-alimento" onclick="toggle(this, 'cena')">Tortilla de espinacas</button>
+        <button class="btn-alimento" onclick="toggle(this, 'cena')">Brócoli al vapor</button>
+      </div>
+    </div>
+
+    <div class="comida-card">
+      <h2>🍎 Snacks</h2>
+      <div class="opciones" id="snacks">
+        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Almendras</button>
+        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Manzana</button>
+        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Zanahoria</button>
+        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Hummus</button>
+        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Banana</button>
+        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Nueces</button>
+        <button class="btn-alimento" onclick="toggle(this, 'snacks')">Maní natural</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="resumen">
+    <h2>📋 Tu Plan del Día</h2>
+    <div class="resumen-item">
+      <span class="resumen-label">Persona</span>
+      <span class="resumen-valor vacio" id="r-nombre">Sin nombre</span>
+    </div>
+    <div class="resumen-item">
+      <span class="resumen-label">🌅 Desayuno</span>
+      <span class="resumen-valor vacio" id="r-desayuno">Sin selección</span>
+    </div>
+    <div class="resumen-item">
+      <span class="resumen-label">☀️ Almuerzo</span>
+      <span class="resumen-valor vacio" id="r-almuerzo">Sin selección</span>
+    </div>
+    <div class="resumen-item">
+      <span class="resumen-label">🌙 Cena</span>
+      <span class="resumen-valor vacio" id="r-cena">Sin selección</span>
+    </div>
+    <div class="resumen-item">
+      <span class="resumen-label">🍎 Snacks</span>
+      <span class="resumen-valor vacio" id="r-snacks">Sin selección</span>
+    </div>
+  </div>
+
+  <button class="btn-pdf" onclick="generarPDF()">⬇️ Descargar Plan en PDF</button>
+
   <script>
-    let n = 0;
-    function sumar() {
-      n++;
-      document.getElementById('count').textContent = n;
-      const msg = document.getElementById('msg');
-      if (n === 10) msg.textContent = '🎉 Llegaste a 10!';
-      else if (n === 5) msg.textContent = 'Vas por la mitad...';
-      else msg.textContent = '';
+    const plan = { desayuno: [], almuerzo: [], cena: [], snacks: [] };
+
+    function toggle(btn, comida) {
+      const texto = btn.textContent;
+      if (btn.classList.contains('selected')) {
+        btn.classList.remove('selected');
+        plan[comida] = plan[comida].filter(x => x !== texto);
+      } else {
+        btn.classList.add('selected');
+        plan[comida].push(texto);
+      }
+      actualizarResumen();
     }
-    function reset() {
-      n = 0;
-      document.getElementById('count').textContent = 0;
-      document.getElementById('msg').textContent = '';
+
+    function actualizarResumen() {
+      const nombre = document.getElementById('nombre').value.trim();
+      const rNombre = document.getElementById('r-nombre');
+      rNombre.textContent = nombre || 'Sin nombre';
+      rNombre.className = 'resumen-valor' + (nombre ? '' : ' vacio');
+
+      ['desayuno', 'almuerzo', 'cena', 'snacks'].forEach(comida => {
+        const el = document.getElementById('r-' + comida);
+        const items = plan[comida];
+        if (items.length > 0) {
+          el.textContent = items.join(', ');
+          el.className = 'resumen-valor';
+        } else {
+          el.textContent = 'Sin selección';
+          el.className = 'resumen-valor vacio';
+        }
+      });
+    }
+
+    function generarPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const nombre = document.getElementById('nombre').value.trim() || 'Sin nombre';
+      const fecha = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+
+      // Fondo header
+      doc.setFillColor(21, 128, 61);
+      doc.rect(0, 0, 210, 40, 'F');
+
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(22);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Plan de Alimentacion Saludable', 105, 18, { align: 'center' });
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Preparado para: ${nombre}`, 105, 28, { align: 'center' });
+      doc.text(`Fecha: ${fecha}`, 105, 36, { align: 'center' });
+
+      let y = 55;
+      const comidas = [
+        { key: 'desayuno', emoji: 'Desayuno', icon: '🌅' },
+        { key: 'almuerzo', emoji: 'Almuerzo', icon: '☀️' },
+        { key: 'cena',     emoji: 'Cena',     icon: '🌙' },
+        { key: 'snacks',   emoji: 'Snacks',   icon: '🍎' },
+      ];
+
+      comidas.forEach(({ key, emoji }) => {
+        // Título de sección
+        doc.setFillColor(240, 253, 244);
+        doc.roundedRect(14, y - 6, 182, 10, 3, 3, 'F');
+        doc.setTextColor(21, 128, 61);
+        doc.setFontSize(13);
+        doc.setFont('helvetica', 'bold');
+        doc.text(emoji, 20, y + 1);
+        y += 10;
+
+        const items = plan[key];
+        if (items.length === 0) {
+          doc.setTextColor(180, 180, 180);
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'italic');
+          doc.text('  Sin seleccion', 20, y);
+        } else {
+          doc.setTextColor(50, 50, 50);
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          items.forEach(item => {
+            doc.text(`  • ${item}`, 20, y);
+            y += 7;
+          });
+          y -= 7;
+        }
+        y += 16;
+      });
+
+      // Footer
+      doc.setFillColor(21, 128, 61);
+      doc.rect(0, 280, 210, 17, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(9);
+      doc.text('Generado con Plan de Alimentacion Saludable', 105, 290, { align: 'center' });
+
+      doc.save(`plan-saludable-${nombre.replace(/\s+/g, '-')}.pdf`);
     }
   </script>
+
 </body>
 </html>
